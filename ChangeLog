@@ -1,0 +1,9 @@
+2008-06-12  Takeshi Enomoto <eno@jamstec.go.jp>
+    * tdef.awk: fixed a bug on incorrect comparison of length(t[1]). wrong location of ).
+2005-12-21  Takeshi Enomoto <eno@jamstec.go.jp>
+    * grads.ncl (grads_read): Improved the detection of the vertical coordinates
+2005-08-18  Takeshi Enomoto <eno@jamstec.go.jp>
+    * tdef.awk: Bug fix. n<2 -> n>1
+2005-02-25  Takeshi Enomoto <eno@jamstec.go.jp>
+    * var*.awk (for-loop): Bug fix. i<n -> i<=n
+    * grads.ncl (grads_time): Bug fix. index of tbuf was out-of-range. Now returns an array. 

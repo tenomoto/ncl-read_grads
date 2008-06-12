@@ -1,0 +1,77 @@
+*Scripts for parsing GrADS .ctl files
+
+-Author: Takeshi Enomoto
+-History: 
+  18 Aug 2005 v0.3: bug fix. hours were obtained incorrectly
+  25 Feb 2005 v0.2: bug fixes. grads_time() now returns a useful array
+  22 Feb 2005 v0.1: first release
+
+This suites consists of awk and ncl scripts.
+
+*awk scripts
+**scripts to read file meta information:
+
+	-dset.awk: returns the path to the data file
+	-title.awk: returns the title
+	-undef.awk: returns the undefined value
+
+**scripts to read coordinates and their meta information:
+
+	-xdef.awk: returns x coordinates
+	-ydef.awk: returns y coordinates 
+	-yrev.awk: returns -1 if option yrev is found 1 if not
+	-zdef.awk: returns z coordinates
+	-zrev.awk: returns -1 if option zrev is found 1 if not
+	-tdef.awk: returns number of records, units, and increment
+
+**scripts to read variables meta information:
+
+	-varnames.awk: returns variable names
+	-varlevs.awk: returns the number of levels for each variable
+	-vardescs.awk: returns the description (long name) for each variable
+	-varid.awk: returns the place of a give variable name in all variables
+
+*ncl utility script
+
+**grads.ncl
+
+Install .awk and .ncl scripts to appropriate directory.
+Here it is assumed that they are installed in:
+	$HOME/lib/ncarg/nclscripts/grads/
+
+To use this script first load this script before "begin" statement.
+
+	load "$HOME/lib/ncarg/nclscripts/grads/grads.ncl"
+
+To read meta data use grads_addfile() function.
+It simply returns the name of the input but with meta data
+such as coordinates as attributes.
+
+		f = grads_addfile("path/to/your/control/file.ctl")
+
+Available attributes are:
+
+	-grd: path to the data file ("DSET")
+	-title: "TITLE"
+	-undef: "UNDEF"
+	-lon: x coorinates
+	-lat: y coorinates
+	-lev: z coorinates
+	-varnames: names of variables
+	-varlevs: the number of levels for each variable
+	-vardescs: description (long name) of each variable
+	-offsets: offset of each variable from the start of the record
+	-nlevs: total number of levels per record
+
+Function grads_read() returns a 2D or 3D array at a record:
+
+		x = grads_read(f,f@varnames(0),0)
+
+Function grads_time() returns an array of increments from the initial time
+with units as attributes
+
+*Limitations
+Parsing is not perfect so there are a numbers of limitations in particular:
+-Byte reversing is not supported.
+-mixed case such as Xdef, xDef are not supported (xdef, XDEF are OK)
+
